@@ -13,5 +13,5 @@ app.get('/', (req, res) => {
 })
 
 app.get('/cat', (req, res) => {
-    res.render('index2.html')
+    res.render('index2.html');
 })
