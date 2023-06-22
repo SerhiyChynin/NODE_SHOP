@@ -20,6 +20,13 @@
   flex-shrink: 0;
   flex-basis: auto;
 }
+/* 
+h1 {
+  background-color: rgb(119, 119, 212);
+  padding: 20px;
+  margin: 0 auto;
+  color: #ffffff;
+} */
 
 .site-header {
   height: auto;
