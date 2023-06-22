@@ -49,39 +49,48 @@ app.get('/', function (req, res) {
 });
 
 app.get('/cat', function (req, res) {
-  console.log(req.query.id);
-  let catId = req.query.id;
+  console.log(req);
+  con.query('SELECT * FROM category', (err, res) => {
+    // console.log(res);
+    if (err) throw err;
 
-  let cat = new Promise(function (resolve, reject) {
-    con.query(
-      'SELECT * FROM category WHERE id=' + catId,
-      function (error, result) {
-        if (error) reject(error);
-        resolve(result);
-      });
-  });
-  let goods = new Promise(function (resolve, reject) {
-    con.query(
-      'SELECT * FROM goods WHERE category=' + catId,
-      function (error, result) {
-        if (error) reject(error);
-        resolve(result);
-      });
-  });
-
-  Promise.all([cat, goods]).then(function (value) {
-    console.log(value[0]);
-    res.render('cat', {
-      cat: JSON.parse(JSON.stringify(value[0])),
-      goods: JSON.parse(JSON.stringify(value[1]))
-    });
   })
-});
+  // console.log(req.query.id);
+  // console.log(req);
+  // let catId = req.query.id;
+  // console.log(req);
 
-app.get('/goods', function (req, res) {
-  console.log(req.query.id);
-  con.query('SELECT * FROM goods WHERE id=' + req.query.id, function (error, result, fields) {
-    if (error) throw error;
-    res.render('goods', { goods: JSON.parse(JSON.stringify(result)) });
-  });
-});
+  // let cat = new Promise(function (resolve, reject) {
+  //   con.query(
+  //     'SELECT * FROM category WHERE id=' + catId,
+  //     function (error, result) {
+  //       if (error) reject(error);
+  //       resolve(result);
+      });
+//   });
+//   let goods = new Promise(function (resolve, reject) {
+//     con.query(
+//       'SELECT * FROM goods WHERE category=' + catId,
+//       function (error, result) {
+//         if (error) reject(error);
+//         console.log(result);
+//         resolve(result);
+//       });
+//   });
+
+//   Promise.all([cat, goods]).then(function (value) {
+//     console.log(value[0]);
+//     res.render('cat', {
+//       cat: JSON.parse(JSON.stringify(value[0])),
+//       goods: JSON.parse(JSON.stringify(value[1]))
+//     });
+//   })
+// });
+
+// app.get('/goods', function (req, res) {
+//   console.log(req.query.id);
+//   con.query('SELECT * FROM goods WHERE id=' + req.query.id, function (error, result, fields) {
+//     if (error) throw error;
+//     res.render('goods', { goods: JSON.parse(JSON.stringify(result)) });
+//   });
+// });
