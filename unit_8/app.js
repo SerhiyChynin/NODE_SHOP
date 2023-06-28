@@ -15,6 +15,7 @@ let mysql = require('mysql2');
 /**
 * настраиваем модуль
 */
+app.use(express.json());
 
 let con = mysql.createConnection({
   host: 'localhost',
@@ -93,5 +94,18 @@ app.post('/get-category-list', function (req, res) {
     if (error) throw error;
     console.log(result);
     res.json(result);
+  });
+});
+
+app.post('/get-goods-info', function (req, res) {
+  console.log(req.body.key);
+  con.query('SELECT id, name, cost FROM goods WHERE id IN ('+req.body.key.join(',')+')', function (error, result, fields) {
+    if (error) throw error;
+    console.log(result);
+    let goods = {};
+    for (let i = 0; i < result.length; i++){
+      goods[result[i]['id']] = result[i];
+    }
+    res.json(goods);
   });
 });
