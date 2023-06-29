@@ -4,6 +4,11 @@ document.querySelectorAll('.add-to-cart').forEach((elem) => {
     
 })
 
+if (localStorage.getItem('cart')) {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    ajaxGetGoodsInfo();
+}
+
 function addToCart() {
     let goodsId = this.dataset.goods_id;
     if (cart[goodsId]) {
@@ -17,6 +22,7 @@ function addToCart() {
 }
 
 function ajaxGetGoodsInfo() {
+    updateLSCart()
     fetch('get-goods-info', {
         method: 'POST',
         body: JSON.stringify({ key: Object.keys(cart) }),
@@ -32,6 +38,7 @@ function ajaxGetGoodsInfo() {
         console.log(body);
         showCart(JSON.parse(body))
     })
+    
 }
 
 function showCart(data) {
@@ -70,4 +77,8 @@ function cartMinus() {
         delete(cart[goodsId]);
     }
     ajaxGetGoodsInfo();
+}
+
+function updateLSCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
 }
