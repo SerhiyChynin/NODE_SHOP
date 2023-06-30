@@ -97,6 +97,14 @@ app.get('/goods', function (req, res) {
   });
 });
 
+
+
+app.get('/order', function (req, res) {
+  res.render('order');
+});
+
+
+
 app.post('/get-category-list', function (req, res) {
   // console.log(req.body);
   con.query('SELECT id, category FROM category', function (error, result, fields) {
@@ -122,3 +130,8 @@ app.post('/get-goods-info', function (req, res) {
     res.send('0');
   }
 });
+
+app.post('/finish-order', function (req, res) {
+  console.log(req.body);
+  res.send('1');
+})
