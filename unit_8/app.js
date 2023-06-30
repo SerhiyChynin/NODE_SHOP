@@ -133,5 +133,22 @@ app.post('/get-goods-info', function (req, res) {
 
 app.post('/finish-order', function (req, res) {
   console.log(req.body);
-  res.send('1');
+  if (req.body.key.length != 0) {
+    let key = Object.keys(req.body.key);
+    con.query(
+      'SELECT id, name, cost FROM goods WHERE id IN (' + key.join(',') + ')',
+      function (error, result, fields) {
+        if (error) throw error;
+        console.log(result);
+        sendMail(req.body, result).catch(console.error);
+        res.send('1');
+      })
+      }
+     else {
+    res.send('0');
+  }
 })
+
+function sendMail(data, result) {
+    
+}
