@@ -17,6 +17,8 @@ let mysql = require('mysql2');
 */
 app.use(express.json());
 
+const nodemailer = require('nodemailer');
+
 let con = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -149,6 +151,13 @@ app.post('/finish-order', function (req, res) {
   }
 })
 
-function sendMail(data, result) {
-    
+async function sendMail(data, result) {
+  let res = '<h2>Order in lite shop</h2>';
+  let total = 0;
+  for (let i = 0; i < result.length; i++) {
+    res += `<p>${result[i]['name']} - ${data.key[result[i]['id']]}  - ${ result[i]['cost'] * data.key[result[i]['id']] } uah</p>`
+    total += result[i]['cost'] * data.key[result[i]['id']];
+  }
+  console.log(res);
+    // await 
 }

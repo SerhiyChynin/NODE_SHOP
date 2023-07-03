@@ -9,7 +9,7 @@ document.querySelector('#lite-shop-order').onsubmit = function (e) {
         Swal.fire({
             title: 'Warning',
             text: 'Read and accept the rule',
-            type: 'info',
+            icon: 'info',
             confirmButtonText: 'Ok'
         });
         return false;
@@ -19,7 +19,7 @@ document.querySelector('#lite-shop-order').onsubmit = function (e) {
            Swal.fire({
             title: 'Warning',
             text: 'Fill all fields',
-            type: 'info',
+            icon: 'info',
             confirmButtonText: 'Ok'
         });
         return false;
@@ -47,7 +47,7 @@ document.querySelector('#lite-shop-order').onsubmit = function (e) {
       Swal.fire({
             title: 'Success',
             text: 'Success',
-            type: 'Error',
+            icon: 'info',
             confirmButtonText: 'Ok'
         });
             
@@ -55,7 +55,7 @@ document.querySelector('#lite-shop-order').onsubmit = function (e) {
       Swal.fire({
             title: 'Problem with mail',
             text: 'Error',
-            type: 'Error',
+            icon: 'Error',
             confirmButtonText: 'Ok'
         });
             }
