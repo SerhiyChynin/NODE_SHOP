@@ -6,9 +6,23 @@ document.querySelector('#lite-shop-order').onsubmit = (e) => {
     let address = document.querySelector('#address').value.trim();
     if (!document.querySelector('#rule').checked) {
         // c правилами не согласен
+        console.log('HELLO');
+        Swal.fire({
+            title: 'Warning',
+            text: 'Read and accept the rule',
+            type: 'info',
+            confirmButtonText: 'Ok'
+        });
+        return false;
     }
     if (username == '' || phone == '' || email == '' || address == '') {
         // не заполнены поля
+           Swal.fire({
+            title: 'Warning',
+            text: 'Fill all fields',
+            type: 'info',
+            confirmButtonText: 'Ok'
+        });
     }
 
     fetch('/finish-order', {
