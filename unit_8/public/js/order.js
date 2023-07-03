@@ -1,5 +1,7 @@
-document.querySelector('#lite-shop-order').onsubmit = (e) => {
+
+document.querySelector('#lite-shop-order').onsubmit = function (e) {
     e.prevent.Default();
+    console.log('HHEEELLLOOOO');
     let username = document.querySelector('#username').value.trim();
     let phone = document.querySelector('#phone').value.trim();
     let email = document.querySelector('#email').value.trim();
@@ -23,6 +25,7 @@ document.querySelector('#lite-shop-order').onsubmit = (e) => {
             type: 'info',
             confirmButtonText: 'Ok'
         });
+        return false;
     }
 
     fetch('/finish-order', {
@@ -44,9 +47,20 @@ document.querySelector('#lite-shop-order').onsubmit = (e) => {
         })
         .then((body) => {
             if (body == 1) {
+      Swal.fire({
+            title: 'Success',
+            text: 'Success',
+            type: 'Error',
+            confirmButtonText: 'Ok'
+        });
             
             } else {
-
+      Swal.fire({
+            title: 'Problem with mail',
+            text: 'Error',
+            type: 'Error',
+            confirmButtonText: 'Ok'
+        });
             }
     })
 }
