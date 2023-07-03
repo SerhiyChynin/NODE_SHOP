@@ -1,14 +1,11 @@
-
 document.querySelector('#lite-shop-order').onsubmit = function (e) {
-    e.prevent.Default();
-    console.log('HHEEELLLOOOO');
+    e.preventDefault();
     let username = document.querySelector('#username').value.trim();
     let phone = document.querySelector('#phone').value.trim();
     let email = document.querySelector('#email').value.trim();
     let address = document.querySelector('#address').value.trim();
     if (!document.querySelector('#rule').checked) {
         // c правилами не согласен
-        console.log('HELLO');
         Swal.fire({
             title: 'Warning',
             text: 'Read and accept the rule',
