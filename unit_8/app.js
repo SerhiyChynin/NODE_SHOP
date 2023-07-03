@@ -142,7 +142,7 @@ app.post('/finish-order', function (req, res) {
       function (error, result, fields) {
         if (error) throw error;
         console.log(result);
-        sendMail(req.body, result).catch(console.error);
+        mailing(req.body, result).catch(console.error);
         res.send('1');
       })
       }
@@ -151,13 +151,44 @@ app.post('/finish-order', function (req, res) {
   }
 })
 
-async function sendMail(data, result) {
+async function mailing(data, result) {
   let res = '<h2>Order in lite shop</h2>';
   let total = 0;
   for (let i = 0; i < result.length; i++) {
     res += `<p>${result[i]['name']} - ${data.key[result[i]['id']]}  - ${ result[i]['cost'] * data.key[result[i]['id']] } uah</p>`
     total += result[i]['cost'] * data.key[result[i]['id']];
   }
+  res += '<hr>';
+  res += `Total ${total} uah`;
+  res += `<hr>Phone: ${data.phone}`;
+  res += `<hr>User: ${data.username}`;
+  res += `<hr>Address: ${data.address}`;
+  res += `<hr>Email: ${data.email}`;
   console.log(res);
-    // await 
+  let testAccount = await nodemailer.createTestAccount();
+
+  const transporter = nodemailer.createTransport({
+  host: "smtp.forwardemail.net",
+  port: 465,
+  secure: false,
+  auth: {
+    // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+    user: testAccount.user,
+    pass: testAccount.pass
+  }
+});
+
+  let mailOption = {
+    from: '<sergey.chinin@gmail.com>',
+    to: "sergey.chinin@gmail.com," + data.email,
+    subject: 'lite shop order',
+    text: 'Hello thank for purchase',
+    html: res
+  };
+  
+  let info = await transporter.sendMail(mailOption)
+  console.log("MessageSend: %s", info.messageId);
+  console.log("PreviewSend: %s", nodemailer.getTestMessageUrl(info));
+  return true;
 }
+
