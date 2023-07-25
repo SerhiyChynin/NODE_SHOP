@@ -1,20 +1,20 @@
 let express = require('express');
 let app = express();
-/**
- * public - имя папки где хранится статика
- */
+
+/*public - имя папки где хранится статика*/
+
 app.use(express.static('public'));
-/**
- *  задаем шаблонизатор
- */
+
+/*задаем шаблонизатор*/
+
 app.set('view engine', 'pug');
-/**
-* Подключаем mysql модуль
-*/
+
+/*Подключаем mysql модуль*/
+
 let mysql = require('mysql2');
-/**
-* настраиваем модуль
-*/
+
+/*настраиваем модуль*/
+
 app.use(express.json());
 
 const nodemailer = require('nodemailer');
@@ -26,6 +26,8 @@ let con = mysql.createConnection({
   database: 'shop'
 });
 
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 app.listen(3000, function () {
   console.log('node express work on 3000');
 });
@@ -33,7 +35,7 @@ app.listen(3000, function () {
 app.get('/', function (req, res) {
   let cat = new Promise((resolve, rej) => {
     con.query(
-        "select id,name, cost, image, category from (select id,name,cost,image,category, if(if(@curr_category != category, @curr_category := category, '') != '', @k := 0, @k := @k + 1) as ind   from goods, ( select @curr_category := '' ) v ) goods where ind < 3",
+        "select id, name, cost, image, category from (select id,name,cost,image,category, if(if(@curr_category != category, @curr_category := category, '') != '', @k := 0, @k := @k + 1) as ind   from goods, ( select @curr_category := '' ) v ) goods where ind < 3",
       (err, res) => {
         if (err) return rej(err);
         resolve(res)
@@ -100,11 +102,9 @@ app.get('/goods', function (req, res) {
 });
 
 
-
 app.get('/order', function (req, res) {
   res.render('order');
 });
-
 
 
 app.post('/get-category-list', function (req, res) {
@@ -143,6 +143,7 @@ app.post('/finish-order', function (req, res) {
         if (error) throw error;
         console.log(result);
         mailing(req.body, result).catch(console.error);
+        saveOrder(req.body, result);
         res.send('1');
       })
       }
@@ -150,6 +151,19 @@ app.post('/finish-order', function (req, res) {
     res.send('0');
   }
 })
+
+
+function saveOrder(data, result) {
+  // data - info about user;
+  //result - info about goods(key, amount); 
+  let sql;
+  sql = "INSERT INTO user_info (user_name, user_phone, user_email, address) VALUES ('" + data.username + "','" + data.phone + "','" + data.email
+    + "','" + data.address + "')";
+  con.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log('1 user info saved');
+  })
+}
 
 async function mailing(data, result) {
   let res = '<h2>Order in lite shop</h2>';
@@ -191,4 +205,6 @@ async function mailing(data, result) {
   console.log("PreviewSend: %s", nodemailer.getTestMessageUrl(info));
   return true;
 }
+
+
 
