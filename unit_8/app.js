@@ -155,6 +155,13 @@ app.post('/finish-order', function (req, res) {
 app.get('/admin', function (req, res) {
   res.render('admin', {})
 });
+
+app.post('/login', function (req, res) {
+  res.end('work')
+  console.log(req.body);
+  // res.render('admin', {})
+});
+
 app.get('/admin-order', function (req, res) {
   con.query(`SELECT 
 	shop_order.id as id,
@@ -177,6 +184,10 @@ ON  shop_order.user_id = user_info.id;
     console.log(result);
     res.render('admin-order', { order: JSON.parse(JSON.stringify(result)) });
   });
+});
+
+app.get('/login', function (req, res) {
+  res.render('login', {})
 });
 
 function saveOrder(data, result) {
