@@ -152,10 +152,19 @@ app.post('/finish-order', function (req, res) {
   }
 })
 
+app.get('/admin', function (req, res) {
+  res.render('admin', {})
+});
+app.get('/admin-order', function (req, res) {
+  con.query('SELECT * FROM shop_order ORDER BY date DESC', function (error, result, fields) {
+    if (error) throw error;
+    res.render('admin-order', { order: JSON.parse(JSON.stringify(result)) });
+  });
+});
 
 function saveOrder(data, result) {
   // data - info about user;
-  //result - info about goods(key, amount); 
+  // result - info about goods(key, amount); 
   let sql;
   sql = "INSERT INTO user_info (user_name, user_phone, user_email, address) VALUES ('" + data.username + "','" + data.phone + "','" + data.email
     + "','" + data.address + "')";
