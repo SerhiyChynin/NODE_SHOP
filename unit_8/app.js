@@ -159,9 +159,21 @@ function saveOrder(data, result) {
   let sql;
   sql = "INSERT INTO user_info (user_name, user_phone, user_email, address) VALUES ('" + data.username + "','" + data.phone + "','" + data.email
     + "','" + data.address + "')";
-  con.query(sql, (err, result) => {
+  con.query(sql, (err, resultQuery) => {
     if (err) throw err;
     console.log('1 user info saved');
+    console.log(resultQuery);
+    let userId = resultQuery.insertId;
+    date = new Date() / 1000;
+    for (let i = 0; i < result.length; i++){   //не оч вариант если 1000 товаров, будет 1000 раз дергать БД, можн записать сразу массив данных
+      sql = "INSERT INTO shop_order (date, user_id, goods_id, goods_cost, goods_amount, total) VALUES ("
+        + date + "," + userId + "," + result[i]['id'] + "," + result[i]['cost'] + "," + data.key[result[i]['id']] + "," +
+        data.key[result[i]['id']] * result[i]['cost'] + ")";
+      con.query(sql, (err, resultQuery) => {
+        if (err) throw err;
+        console.log(' 1 good saved');
+        })
+    }
   })
 }
 
