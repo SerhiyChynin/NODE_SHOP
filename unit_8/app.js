@@ -1,5 +1,7 @@
 let express = require('express');
 let app = express();
+let cookieParser = require('cookie-parser');
+let admin = require('./public/admin.js');
 
 /*public - имя папки где хранится статика*/
 
@@ -17,6 +19,7 @@ let mysql = require('mysql2');
 
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cookieParser());
 
 const nodemailer = require('nodemailer');
 
@@ -32,6 +35,14 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 app.listen(3000, function () {
   console.log('node express work on 3000');
 });
+
+app.use((req, res, next) => {
+  if (req.originalUrl == '/admin' || req.originalUrl == '/admin-order'  ) {
+    admin(req, res, con, next)
+  } else{
+    next();
+  }
+})
 
 app.get('/', function (req, res) {
   let cat = new Promise((resolve, rej) => {
@@ -154,12 +165,35 @@ app.post('/finish-order', function (req, res) {
 })
 
 app.get('/admin', function (req, res) {
-  res.render('admin', {})
+  res.render('admin', {});
 });
+  // console.log(req.cookies.hash);
+  // console.log(req.cookies);
+  // console.log(req.cookies.id);
+  // if (req.cookies.hash == undefined || req.cookies.id == undefined) {
+  //   res.redirect('/login');
+  //   return false;
+  // }
+  // con.query(
+  //   'SELECT * FROM user WHERE id="' + req.cookies.id + '"and hash="' + req.cookies.hash + '"',
+  //   function (error, result) {
+  //     if (error) reject (error);
+  //     console.log(result);
+  //     if (result.length == 0) {
+  //       console.log('error, user not found');
+  //       res.redirect('/login');
+  //     } else {
+  //       res.render('admin', {});
+  //     }
+  //   });
+  //       // res.render('admin', {});
+  
+// });
 
 
 
 app.get('/admin-order', function (req, res) {
+
   con.query(`SELECT 
 	shop_order.id as id,
 	shop_order.user_id as user_id,
@@ -180,7 +214,8 @@ ON  shop_order.user_id = user_info.id;
     if (error) throw error;
     console.log(result);
     res.render('admin-order', { order: JSON.parse(JSON.stringify(result)) });
-  });
+});
+
 });
 
 // Login form ******************************
@@ -191,7 +226,6 @@ app.get('/login', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-  // res.end('work')
   console.log('=================');
   console.log(req.body);
   console.log(req.body.login);
@@ -206,14 +240,16 @@ app.post('/login', function (req, res) {
           res.redirect('/login');
         } else {
           result = JSON.parse(JSON.stringify(result));
-          res.cookie('hash', 'MISHIGIN');
+          let hash = makeHash(32);
+          res.cookie('hash', hash);
+          res.cookie('id', result[0]['id']);
           // пишем в БД хеш
-          console.log(result[0]['id']);
-          sql = "UPDATE `shop`.`user` SET `hash` = 'MISHIGIN222' WHERE `id` =" + result[0]['id'];
+          // console.log(result[0]['id']);
+          sql = "UPDATE `shop`.`user` SET `hash` = '" + hash + "' WHERE `id` =" + result[0]['id'];
           con.query(sql, (err, resultQuery) => {
             if (err) throw err;
             res.redirect('/admin');
-            console.log(result[0]['hash']);
+            // console.log(result[0]['hash']);
           })
         }
 })
@@ -285,4 +321,15 @@ async function mailing(data, result) {
 }
 
 
+function makeHash(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
 
