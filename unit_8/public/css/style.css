@@ -84,3 +84,8 @@ ul.category-list a {
   color: #424242;
 }
 
+.admin th, td{
+  border: 1px solid black;
+  padding: 5px;
+}
+
