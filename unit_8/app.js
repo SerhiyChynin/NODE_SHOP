@@ -16,6 +16,7 @@ let mysql = require('mysql2');
 /*настраиваем модуль*/
 
 app.use(express.json());
+app.use(express.urlencoded());
 
 const nodemailer = require('nodemailer');
 
@@ -156,11 +157,7 @@ app.get('/admin', function (req, res) {
   res.render('admin', {})
 });
 
-app.post('/login', function (req, res) {
-  res.end('work')
-  console.log(req.body);
-  // res.render('admin', {})
-});
+
 
 app.get('/admin-order', function (req, res) {
   con.query(`SELECT 
@@ -186,8 +183,40 @@ ON  shop_order.user_id = user_info.id;
   });
 });
 
+// Login form ******************************
+
+
 app.get('/login', function (req, res) {
   res.render('login', {})
+});
+
+app.post('/login', function (req, res) {
+  // res.end('work')
+  console.log('=================');
+  console.log(req.body);
+  console.log(req.body.login);
+  console.log(req.body.password);
+  console.log('=================');
+    con.query(
+      'SELECT * FROM user WHERE login="' + req.body.login + '"and password="' + req.body.password +'"',
+      function (error, result) {
+        if (error) reject(error);
+        if (result.length == 0) {
+          console.log('error, user not found');
+          res.redirect('/login');
+        } else {
+          result = JSON.parse(JSON.stringify(result));
+          res.cookie('hash', 'MISHIGIN');
+          // пишем в БД хеш
+          console.log(result[0]['id']);
+          sql = "UPDATE `shop`.`user` SET `hash` = 'MISHIGIN222' WHERE `id` =" + result[0]['id'];
+          con.query(sql, (err, resultQuery) => {
+            if (err) throw err;
+            res.redirect('/admin');
+            console.log(result[0]['hash']);
+          })
+        }
+})
 });
 
 function saveOrder(data, result) {
