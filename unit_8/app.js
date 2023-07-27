@@ -105,10 +105,12 @@ app.get('/cat', function (req, res) {
   })
 });
 
-app.get('/goods', function (req, res) {
-  console.log(req.query.id);
-  con.query('SELECT * FROM goods WHERE id=' + req.query.id, function (error, result, fields) {
+app.get('/goods/*', function (req, res) {
+  console.log('work');
+  console.log(req.params);
+  con.query('SELECT * FROM goods WHERE slug="' + req.params['0'] + '"', function (error, result, fields) {
     if (error) throw error;
+    console.log(result);
     res.render('goods', { goods: JSON.parse(JSON.stringify(result)) });
   });
 });
