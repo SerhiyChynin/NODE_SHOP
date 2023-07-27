@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 app.get('/', function (req, res) {
   let cat = new Promise((resolve, rej) => {
     con.query(
-        "select id, name, cost, image, category from (select id,name,cost,image,category, if(if(@curr_category != category, @curr_category := category, '') != '', @k := 0, @k := @k + 1) as ind   from goods, ( select @curr_category := '' ) v ) goods where ind < 3",
+        "select id, slug, name, cost, image, category from (select id, slug, name,cost,image,category, if(if(@curr_category != category, @curr_category := category, '') != '', @k := 0, @k := @k + 1) as ind   from goods, ( select @curr_category := '' ) v ) goods where ind < 3",
       (err, res) => {
         if (err) return rej(err);
         resolve(res)
@@ -106,8 +106,9 @@ app.get('/cat', function (req, res) {
 });
 
 app.get('/goods/*', function (req, res) {
-  console.log('work');
-  console.log(req.params);
+  // console.log('work');
+  console.log(req.params['0']);
+  // console.log(req);
   con.query('SELECT * FROM goods WHERE slug="' + req.params['0'] + '"', function (error, result, fields) {
     if (error) throw error;
     console.log(result);
