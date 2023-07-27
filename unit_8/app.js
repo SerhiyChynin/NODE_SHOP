@@ -112,8 +112,16 @@ app.get('/goods/*', function (req, res) {
   con.query('SELECT * FROM goods WHERE slug="' + req.params['0'] + '"', function (error, result, fields) {
     if (error) throw error;
     console.log(result);
-    res.render('goods', { goods: JSON.parse(JSON.stringify(result)) });
-  });
+    result = JSON.parse(JSON.stringify(result));
+    console.log(result['0']['id']);
+    con.query('SELECT * FROM images WHERE good_id=' + result[0]['id'], function (error, goodsImg, fields) {
+      if (error) throw error;
+      console.log(goodsImg);
+      goodsImg = JSON.parse(JSON.stringify(goodsImg));
+      res.render('goods', { goods: result, goods_img: goodsImg });
+
+    });
+});
 });
 
 
