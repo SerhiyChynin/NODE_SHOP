@@ -119,7 +119,6 @@ app.get('/goods/*', function (req, res) {
       console.log(goodsImg);
       goodsImg = JSON.parse(JSON.stringify(goodsImg));
       res.render('goods', { goods: result, goods_img: goodsImg });
-
     });
 });
 });
