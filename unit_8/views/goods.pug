@@ -15,11 +15,12 @@ div(class='wrap')
                 class="goods-big-image"
             )
             div(class='row')
-              div(class="col col-md-6")
-                img(
-                  src="/images/"+goods[0]['image']
-                  class="goods-big-image"
-                )
+              each val, index in goods_img
+                div(class="col col-md-6")
+                  img(
+                    src="/images/"+val['path']
+                    class="goods-little-image"
+                  )
 
         div(class="col col-md-8")
             p #{goods[0]['description']}

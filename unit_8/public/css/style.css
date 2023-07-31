@@ -84,8 +84,12 @@ ul.category-list a {
   color: #424242;
 }
 
-.admin th, td{
+.th{
   border: 1px solid black;
   padding: 5px;
+}
+.goods-little-image{
+  max-width: 90%;
+  margin: 5%;
 }
 

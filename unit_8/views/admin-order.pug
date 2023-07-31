@@ -7,25 +7,25 @@ h1 Admin-panel
 h2 Order-information
 table(class="admin")
  tr
-  th id
-  th date
-  th user_Id
-  th goods_Id
-  th goods Cost
-  th goods Amount
-  th Total
-  th User
-  th Phone
-  th Address
+  th(class="th") id
+  th(class="th") date
+  th(class="th") user_Id
+  th(class="th") goods_Id
+  th(class="th") goods Cost
+  th(class="th") goods Amount
+  th(class="th") Total
+  th(class="th") User
+  th(class="th") Phone
+  th(class="th") Address
  each val, index in order
   tr
-   td #{val['id']}
-   td #{val['human_date']}
-   td #{val['user_id']}
-   td #{val['goods_id']}
-   td #{val['goods_cost'].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ')} uah
-   td #{val['goods_amount']}
-   td #{val['total'].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ')} uah
-   td #{val['user']}
-   td #{val['phone']}
-   td #{val['address']}
+   td(class="th") #{val['id']}
+   td(class="th") #{val['human_date']}
+   td(class="th") #{val['user_id']}
+   td(class="th") #{val['goods_id']}
+   td(class="th") #{val['goods_cost'].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ')} uah
+   td(class="th") #{val['goods_amount']}
+   td(class="th") #{val['total'].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ')} uah
+   td(class="th") #{val['user']}
+   td(class="th") #{val['phone']}
+   td(class="th") #{val['address']}
